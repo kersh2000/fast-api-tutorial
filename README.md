@@ -13,4 +13,4 @@ To start server: uvicorn server:app --reload
 
 Server site (localhost): http://127.0.0.1:8000
 
-Server sire for instructions on endpoints: http://127.0.0.1:8000/docs
+Server site for instructions on endpoints: http://127.0.0.1:8000/docs
