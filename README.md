@@ -10,4 +10,5 @@ Uvicorn - 0.16.0
 Instructions:
 
 To start server: uvicorn server:app --reload
+
 Server site (localhost): http://127.0.0.1:8000
