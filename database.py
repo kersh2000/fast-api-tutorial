@@ -1,39 +1,57 @@
 import sqlite3
 tables = {
   'users': {
-    'first_name': 'text',
-    'last_name': 'text',
-    'email': 'text'
+    'id': 'INTEGER PRIMARY KEY',
+    'username': 'TEXT NOT NULL UNIQUE',
+    'password': 'TEXT NOT NULL'
   },
   'palettes': {
-    'name': 'text',
-    'theme': 'text',
-    'colours': 'text[]'
+    'id': 'INTEGER PRIMARY KEY',
+    'name': 'TEXT NOT NULL',
+    'theme': 'TEXT DEFAULT NULL',
+    'colours': 'TEXT[] NOT NULL',
+    'public': 'INTEGER DEFAULT 0',
+    'user_id': 'INTEGER DEFAULT NULL, FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE SET DEFAULT'
   }
 }
 # Create function to easily use SQL queries in other files
 def query(sql, params = ()):
   # Connect to a database
   connection = sqlite3.connect('post_db.db')
+  try:
+    # For data formatting after query execution
+    connection.row_factory = sqlite3.Row
 
-  # Create a cursor
-  cursor = connection.cursor()
+    # Create a cursor
+    cursor = connection.cursor()
 
-  # Run sql query
-  data = cursor.execute(sql, (params))
+    # Run sql query
+    if type(params) == str:
+      params = tuple((params,))
+    print(f"\n------------------------------\nSQL QUERY:\nsql = {sql}\nparams = {params}\n------------------------------\n")
+    data = cursor.execute(sql, params)
 
-  # Fetch all data if exists
-  if (bool(data)):
-    data = data.fetchall()
+    # Convert data into JSON (array[dict1, dict2, dict3...])
+    values = data.fetchall()
+    json = []
+    for item in values:
+      json.append({k: item[k] for k in item.keys()})
 
-  # Commit our command
-  connection.commit()
+    # # Fetch all data if exists
+    # if (bool(data)):
+    #   data = data.fetchall()
 
-  # Close our connection
-  connection.close()
+    # Commit our command
+    connection.commit()
 
-  # Return data
-  return data
+    # Return json-formatted data
+    return json[0] if len(json) == 1 else json
+  except Exception as e:
+    print(f"Failed to execute. Query: {sql}\n Parameters: {params}\n Error: {e}")
+    raise Exception(e)
+  finally:
+    # Close our connection
+    connection.close()
 
 
 # Flexible functions -----------------------------------------------------------------------------
@@ -49,9 +67,9 @@ def initialise():
 
 # Drop table and re-create with empty contents
 def destroy(tableName):
-  sql = f"DROP TABLE IF EXISTS {tableName}"
-  query(sql)
-  initialise()
+  if tableName in tables.keys():
+    sql = f"DROP TABLE IF EXISTS {tableName}"
+    query(sql)
 
 # Drop all tables and re-create with empty contents
 def destroyAll():
@@ -59,61 +77,113 @@ def destroyAll():
   destroy('palettes')
   initialise()
 
-# Select one entry from a table
-def findOne(tableName, condition = None):
-  """
-  Returns first entry of table
-  :param string tableName: Name of the Table.
-  :param string condition: Conditon included in the WHERE statement.
-  :returns: tuple of entry, (entry)
-  """
-  return(findMany(tableName, condition, 1))
+def findUserById(id):
+  return query("""
+  SELECT * FROM users
+  WHERE id = (?)
+  LIMIT 1
+  """, str(id))
 
-def findMany(tableName, condition = None, limit = None):
-  limitSQL = "" if not bool(limit) else f"LIMIT {limit}"
-  conditionSQL = "" if not bool(condition) else f"WHERE {condition}"
-  sql = f"SELECT * FROM {tableName} {conditionSQL} {limitSQL}"
-  print(sql)
-  return query(sql)
+def findUserByUsername(username):
+  return query("""
+  SELECT * FROM users
+  WHERE username = (?)
+  LIMIT 1""", username)
 
-# Select all entries from a table
+def findPaletteById(id):
+  return query("""
+  SELECT * FROM palettes
+  WHERE id = (?)
+  """, str(id))
+
+def findPalettesByUserId(user_id):
+  return query("""
+  SELECT * FROM palettes
+  WHERE user_id = (?)
+  """, str(user_id))
+
+def findPaletteByName(name, user_id):
+  return query("""
+  SELECT * FROM palettes
+  WHERE name = (?) AND user_id = (?)
+  LIMIT 1""", (name, str(user_id)))
+
+def findPalettesByTheme(theme, user_id):
+  return query("""
+  SELECT * FROM palettes
+  WHERE theme = (?) AND user_id = (?)
+  """, (theme, str(user_id)))
+
 def findAll(tableName):
   """
   Returns all entries of a table.
   :param string tableName: Name of the Table.
   :returns: Array of entries as tuples, [(entry1), (entry2), (entry3)...]
   """
-  sql = f"SELECT * FROM {tableName}"
-  return query(sql)
+  if tableName in tables.keys():
+    sql = f"SELECT * FROM {tableName}"
+    return query(sql)
 
-# Add single entry to table
-def addOne(tableName, *args):
-  sql = f"INSERT INTO {tableName} VALUES (?, ?, ?)"
-  query(sql, args)
+def removeUserById(id):
+  query("""
+  DELETE FROM users WHERE id = (?)
+  """, str(id))
 
-# Add multiple entries to table
-def addMany(tableName, entries):
-  """
-  Add's multiple entries into the table.
-  :param string tableName: Name of the Table.
-  :param array of tuples entries: Entry values, ((col1, col2, ...), (col1, col2)...)
-  """
-  for entry in entries:
-    sql = f"INSERT INTO {tableName} VALUES (?, ?, ?)"
-    query(sql, (entry[0], entry[1], entry[2]))
+def removePaletteById(id):
+  query("""
+  DELETE FROM palettes
+  WHERE id = (?)
+  """, str(id))
 
-# Delete a single entry from a table.
-def remove(ent):
-  entry = ent[0] # Get the entry from the user input
-  for table in tables:
-    cols = []
-    for col in tables[table]:
-      cols.append(col)
-    condition = ""
-    for j, col in enumerate(entry):
-      condition += f'{cols[j]} = "{col}" AND '
-    condition = condition[:-5]
-    if bool(findOne(table, condition)):
-      sql = f"DELETE FROM {table} WHERE {condition}"
-      query(sql)
-      break
+def removePalettesByUserId(user_id):
+  query("""
+  DELETE FROM palettes WHERE user_id = (?)
+  """, str(user_id))
+
+def updatePalettesTheme(oldTheme, newTheme, id):
+  query("""
+  UPDATE palettes
+  SET theme = (?)
+  WHERE theme = (?) AND id = (?)
+  """, (newTheme, oldTheme, str(id)))
+
+def removePaletteTheme(theme, user_id):
+  query("""
+  UPDATE palettes
+  SET theme = null
+  WHERE theme = (?) AND user_id = (?)
+  """, (theme, str(user_id)))
+
+def findPublicPalettes():
+  return query("""
+  SELECT palettes.name, palettes.theme, palettes.colours, users.username 
+  FROM palettes
+  INNER JOIN users ON palettes.user_id = users.id
+  WHERE palettes.public = 1
+  """)
+
+def findDistinctPalettes(user_id):
+  return query("""
+  SELECT DISTINCT theme FROM palettes
+  WHERE user_id = (?)
+  """, str(user_id))
+
+def addOne(tableName, props):
+  if tableName not in tables.keys():
+    return False
+  columns = props.keys()  
+  placeholder_columns = ", ".join(props.keys())
+  placeholder_values = ", ".join([":{0}".format(col) for col in columns])
+  sql = "INSERT INTO {table_name} ({placeholder_columns}) VALUES ({placeholder_values})".format(
+    table_name=tableName,
+    placeholder_columns=placeholder_columns,
+    placeholder_values=placeholder_values
+  )
+  query(sql, props)
+
+def addMany(tableName, arr):
+  if tableName not in tables.keys():
+    return False
+  for entry in arr:
+    addOne(tableName, entry)
+
