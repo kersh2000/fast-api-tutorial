@@ -69,7 +69,7 @@ def find_user(username: str = Form(), password: str = Form()):
     raise HTTPException(status_code=404, detail="User not found.")
   elif record["password"] != password:
     raise HTTPException(status_code=401, detail="Incorrect password.")
-  return record
+  return record["id"]
 
 # Create user through body
 @app.post("/register")
