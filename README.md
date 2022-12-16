@@ -32,5 +32,6 @@ palettes:
 - (DELETE) /palettes/{id} => Delete the pallete which matches with the ID of the pallete passed in, return a conformation message or status code if succesful or unsuccessful.
 - (DELETE) /palettes/{user_id}/{theme} => Remove the theme of the palette with the match ID passed in.
 - *(PUT) /palettes/{theme} => Change the theme of the palette to the values passed in, return new array of updated palettes.
+- *(PUT) /palettes/name => Change the name of the palette to the values passed in.
 - **(PUT) /palettes/colour => Change the colours of the palette through the body. (body = {"id": _int_, "new_colours": _["string"]_})
 - **(GET) /palletes/public => Get all palettes and their user's username (with inner join) in order to get all palettes from the DB which have a public value of 1.

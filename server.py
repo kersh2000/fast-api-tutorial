@@ -45,6 +45,10 @@ class ColourChange(BaseModel):
   id: int
   colours: list
 
+class NameChange(BaseModel):
+  id: int
+  newName: str
+
 app = FastAPI()
 
 origins = ["*"]
@@ -113,6 +117,14 @@ def delete_palette(id: int):
   if not bool(record):
     raise HTTPException(status_code=404, detail="Palette not found.")
   db.removePaletteById(id)
+
+# Update palette's name
+@app.put("/palettes/name")
+def update_palette_name(name: NameChange):
+  record = db.findPaletteById(name.id)
+  if not bool(record):
+    raise HTTPException(status_code=404, detail="Palette not found.")
+  db.updatePalettesName(name.newName, name.id)
 
 # Update palette's theme
 @app.put("/palettes/theme")

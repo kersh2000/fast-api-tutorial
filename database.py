@@ -140,6 +140,13 @@ def removePalettesByUserId(user_id):
   DELETE FROM palettes WHERE user_id = (?)
   """, str(user_id))
 
+def updatePalettesName(name, id):
+  query("""
+  UPDATE palettes
+  SET name = (?)
+  WHERE id = (?)
+  """, (name, id))
+
 def updatePalettesTheme(oldTheme, newTheme, id):
   query("""
   UPDATE palettes
