@@ -102,11 +102,11 @@ def findPalettesByUserId(user_id):
   WHERE user_id = (?)
   """, str(user_id))
 
-def findPaletteByName(name, user_id):
-  return query("""
-  SELECT * FROM palettes
-  WHERE name = (?) AND user_id = (?)
-  LIMIT 1""", (name, str(user_id)))
+# def findPaletteByName(name, user_id):
+#   return query("""
+#   SELECT * FROM palettes
+#   WHERE name = (?) AND user_id = (?)
+#   LIMIT 1""", (name, str(user_id)))
 
 def findPalettesByTheme(theme, user_id):
   return query("""
@@ -146,6 +146,13 @@ def updatePalettesTheme(oldTheme, newTheme, id):
   SET theme = (?)
   WHERE theme = (?) AND id = (?)
   """, (newTheme, oldTheme, str(id)))
+
+def updatePalettesColours(id, colours):
+  query("""
+  UPDATE palettes
+  SET colours = (?)
+  WHERE id = (?)
+  """, (colours, id))
 
 def removePaletteTheme(theme, user_id):
   query("""

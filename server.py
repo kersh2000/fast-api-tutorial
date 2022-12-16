@@ -41,6 +41,10 @@ class ThemeChange(BaseModel):
   oldTheme: str
   newTheme: str
 
+class ColourChange(BaseModel):
+  id: int
+  colours: list
+
 app = FastAPI()
 
 origins = ["*"]
@@ -62,7 +66,6 @@ def find_user(user: User):
   elif record["password"] != user.password:
     raise HTTPException(status_code=401, detail="Incorrect password.")
   return record
-
 
 # Create user through body
 @app.post("/register")
@@ -119,9 +122,21 @@ def update_palette_theme(theme: ThemeChange):
     raise HTTPException(status_code=404, detail="Palette not found.")
   themeRecord = db.findPalettesByTheme(theme.oldTheme, theme.id)
   if not bool(themeRecord):
-    raise HTTPException(status_code=404, detail="")
+    raise HTTPException(status_code=404, detail="Error")
 
   db.updatePalettesTheme(theme.oldTheme, theme.newTheme, theme.id)
+
+@app.put("/palettes/colour")
+def update_palette_colour(colour: ColourChange):
+  record = db.findPaletteById(colour.id)
+  if not bool(record):
+    raise HTTPException(status_code=404, detail="Palette not found.")
+  colours = '{'
+  for eachColour in colour.colours:
+    colours += eachColour + ", "
+  colours = colours[:-2]
+  colours += '}'
+  db.updatePalettesColours(colour.id, colour.colours)
 
 @app.delete("/palettes/{user_id}/{theme}")
 def remove_theme(user_id: int, theme: str):
