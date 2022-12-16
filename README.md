@@ -6,6 +6,7 @@ Python - 3.6.8
 PIP - 18.1
 FastAPI - 0.83.0
 Uvicorn - 0.16.0
+Python-multipart - 0.0.5 six-1.16.0
 
 
 Instructions:

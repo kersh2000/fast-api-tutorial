@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, status
+from fastapi import FastAPI, HTTPException, status, Form
 from fastapi.middleware.cors import CORSMiddleware
 import database as db
 import seed as s
@@ -62,12 +62,12 @@ app.add_middleware(
 )
 
 # Get user by username and password
-@app.post("/login")
-def find_user(user: User):
-  record = dict(db.findUserByUsername(user.username))
+@app.post("/login", )
+def find_user(username: str = Form(), password: str = Form()):
+  record = dict(db.findUserByUsername(username))
   if not bool(record):
     raise HTTPException(status_code=404, detail="User not found.")
-  elif record["password"] != user.password:
+  elif record["password"] != password:
     raise HTTPException(status_code=401, detail="Incorrect password.")
   return record
 
