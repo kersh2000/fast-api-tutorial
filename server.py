@@ -166,7 +166,7 @@ def get_distinct_themes(user_id: int):
   return db.findDistinctPalettes(user_id)
 
 # Get all public palettes
-@app.get("/palettes/public")
+@app.get("/public")
 def get_public_palettes():
   return db.findPublicPalettes()
 
