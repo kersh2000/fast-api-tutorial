@@ -4,6 +4,7 @@ import database as db
 import seed as s
 from pydantic import BaseModel
 from typing import Optional
+from starlette.responses import RedirectResponse
 
 class User(BaseModel):
   username: str
@@ -69,7 +70,7 @@ def find_user(username: str = Form(), password: str = Form()):
     raise HTTPException(status_code=404, detail="User not found.")
   elif record["password"] != password:
     raise HTTPException(status_code=401, detail="Incorrect password.")
-  return record["id"]
+  return RedirectResponse(url = f"http://localhost:3000/palettes")
 
 # Create user through body
 @app.post("/register")
