@@ -78,6 +78,8 @@ def create_user(user: User):
     if not user.username.isalnum() or len(user.password) < 6:
       raise ValueError("Invalid username or password")
     db.addOne('users', user.asdict())
+    record = dict(db.findUserByUsername(user.username))
+    return record["id"]
   except ValueError:
     raise HTTPException(status_code=400, detail="Invalid username or password.")
   except Exception:
@@ -158,7 +160,7 @@ def remove_theme(user_id: int, theme: str):
   db.removePaletteTheme(theme, user_id)
   return db.findPalettesByUserId(user_id)
 
-@app.get("/palettes/distinct/{user_id}")
+@app.get("/distinct/{user_id}")
 def get_distinct_themes(user_id: int):
   record = db.findUserById(user_id)
   if not bool(record):
