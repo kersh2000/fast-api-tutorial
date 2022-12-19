@@ -31,14 +31,14 @@ def seed():
     {
     'name': 'palette2',
     'theme': 'Warm',
-    'colours': "{'#23D4E0', '#FF9014', '#46DC9C'}",
+    'colours': "{'#FF9014', '#46DC9C', '#23D4E0'}",
     'public': 1,
     'user_id': 1
   },
   {
     'name': 'palette3',
     'theme': 'Warm',
-    'colours': "{'#097275', '#024449', '#F4E9CD', '#C96D1C', '#E2AD38'}",
+    'colours': "{'#024449', '#097275', '#F4E9CD', '#E2AD38', '#C96D1C'}",
     'public': 0,
     'user_id': 1
   },
@@ -52,7 +52,7 @@ def seed():
   {
     'name': 'Warm flower',
     'theme': 'Warm',
-    'colours': "{ '#422964', '#4F2C8A', '#1E310F', '#793730', '#D7841D' }",
+    'colours': "{ '#4F2C8A', '#422964', '#1E310F', '#793730', '#D7841D' }",
     'public': 0,
     'user_id': 2
   },
