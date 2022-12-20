@@ -99,7 +99,8 @@ def find_palettes(user_id: int):
   record = db.findUserById(user_id)
   if not bool(record):
     raise HTTPException(status_code=404, detail="User not found.")
-  return db.findPalettesByUserId(user_id)
+  paletteRecord = db.findPalettesByUserId(user_id)
+  return paletteRecord if not isinstance(paletteRecord, dict) else [paletteRecord]
 
 # Get palettes by user_id and theme
 @app.get("/palettes/{user_id}/{theme}")
@@ -165,12 +166,14 @@ def get_distinct_themes(user_id: int):
   record = db.findUserById(user_id)
   if not bool(record):
     raise HTTPException(status_code=404, detail="User not found.")
-  return db.findDistinctPalettes(user_id)
+  paletteRecord = db.findDistinctPalettes(user_id)
+  return paletteRecord if not isinstance(paletteRecord, dict) else [paletteRecord]
 
 # Get all public palettes
 @app.get("/public")
 def get_public_palettes():
-  return db.findPublicPalettes()
+  paletteRecord = db.findPublicPalettes()
+  return paletteRecord if not isinstance(paletteRecord, dict) else [paletteRecord]
 
 # Create palette through body
 @app.post("/palettes")
@@ -199,7 +202,8 @@ def create_palette(palette: Palette):
 # Get all entries from table
 @app.get("/{table}")
 def get_entries(table: str):
-  return db.findAll(table)
+  record = db.findAll(table)
+  return record if not isinstance(record, dict) else [record]
 
 @app.post("/seed")
 def seed():
