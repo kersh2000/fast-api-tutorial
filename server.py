@@ -151,10 +151,10 @@ def update_palette_colour(colour: ColourChange):
     raise HTTPException(status_code=404, detail="Palette not found.")
   colours = '{'
   for eachColour in colour.colours:
-    colours += eachColour + ", "
+    colours += "'" + eachColour + "'" + ", "
   colours = colours[:-2]
   colours += '}'
-  db.updatePalettesColours(colour.id, colour.colours)
+  db.updatePalettesColours(colour.id, colours)
 
 @app.delete("/palettes/{user_id}/{theme}")
 def remove_theme(user_id: int, theme: str):
