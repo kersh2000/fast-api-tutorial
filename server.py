@@ -110,7 +110,7 @@ def find_themed_palettes(user_id: int, theme: str):
   paletteRecord = db.findPalettesByTheme(theme, user_id)
   if not bool(paletteRecord):
     raise HTTPException(status_code=404, detail="Theme has no palettes.")
-  return paletteRecord
+  return paletteRecord if not isinstance(paletteRecord, dict) else [paletteRecord]
 
 # Remove palette by id
 @app.delete("/palettes/{id}")
