@@ -184,8 +184,8 @@ def findDistinctPalettes(user_id):
 
 def findLatestPalette():
   return query("""
-  SELECT MAX(id) AS max
-  FROM palettes
+  SELECT * FROM palettes WHERE
+  id = (SELECT MAX(id) FROM palettes)
   """)
 
 def addOne(tableName, props):

@@ -3,19 +3,15 @@ import database as db
 def seed():
 
   db.destroyAll()
-  print(db.findAll('users'))
 
   user1 = {
     'username': 'abcdef',
     'password': 'strongPassword1!'
   }
   db.addOne('users', user1)
-  print(db.findAll('users'))
-  print(db.findUserByUsername('abcdef'), "\n")
 
   sampleUsers = [{'username': 'admin', 'password': 'admin'}, {'username': 'user1', 'password': 'password1'}, {'username': 'user2', 'password': 'password2'}, {'username': 'user3', 'password': 'password3'}]
   db.addMany('users', sampleUsers)
-  print(db.findAll('users'))
 
   palette1 = {
     'name': 'palette1',
@@ -25,7 +21,6 @@ def seed():
     'user_id': 1
   }
   db.addOne('palettes', palette1)
-  print(db.findAll('palettes'))
 
   samplePalettes = [
     {
@@ -84,19 +79,110 @@ def seed():
   }
   ]
   db.addMany('palettes', samplePalettes)
-  print(db.findAll('palettes'))
-
-  print(db.findPalettesByUserId("2"))
-
-  print(db.findPalettesByTheme('Warm', "1"))
-
-  print(db.findPublicPalettes())
 
   db.updatePalettesTheme('Warm', 'Warm2', 1)
 
-  print(db.findPaletteById("1"))
 
-  print(db.findDistinctPalettes("2"))
+
+  # db.destroyAll()
+  # print(db.findAll('users'))
+
+  # user1 = {
+  #   'username': 'abcdef',
+  #   'password': 'strongPassword1!'
+  # }
+  # db.addOne('users', user1)
+  # print(db.findAll('users'))
+  # print(db.findUserByUsername('abcdef'), "\n")
+
+  # sampleUsers = [{'username': 'admin', 'password': 'admin'}, {'username': 'user1', 'password': 'password1'}, {'username': 'user2', 'password': 'password2'}, {'username': 'user3', 'password': 'password3'}]
+  # db.addMany('users', sampleUsers)
+  # print(db.findAll('users'))
+
+  # palette1 = {
+  #   'name': 'palette1',
+  #   'theme': 'Warm',
+  #   'colours': "{'#3dc522', '#c20945', '#2d84ee'}",
+  #   'public': 1,
+  #   'user_id': 1
+  # }
+  # db.addOne('palettes', palette1)
+  # print(db.findAll('palettes'))
+
+  # samplePalettes = [
+  #   {
+  #   'name': 'palette2',
+  #   'theme': 'Warm',
+  #   'colours': "{'#FF9014', '#46DC9C', '#23D4E0'}",
+  #   'public': 1,
+  #   'user_id': 1
+  # },
+  # {
+  #   'name': 'palette3',
+  #   'theme': 'Warm',
+  #   'colours': "{'#024449', '#097275', '#F4E9CD', '#E2AD38', '#C96D1C'}",
+  #   'public': 0,
+  #   'user_id': 1
+  # },
+  # {
+  #   'name': 'Warm pruple',
+  #   'theme': 'Warm',
+  #   'colours': "{'#472F5B', '#715C83', '#8F79A1', '#526863', '#314641', '#203732'}",
+  #   'public': 0,
+  #   'user_id': 2
+  # },
+  # {
+  #   'name': 'Warm flower',
+  #   'theme': 'Warm',
+  #   'colours': "{'#4F2C8A', '#422964', '#1E310F', '#793730', '#D7841D'}",
+  #   'public': 0,
+  #   'user_id': 2
+  # },
+  # {
+  #   'name': 'Fun Purple',
+  #   'colours': "{'#C796E5', '#EDA4C2', '#A540FC', '#912CE0', '#54E2BA'}",
+  #   'public': 1,
+  #   'user_id': 2
+  # },
+  # {
+  #   'name': 'Dark Purple',
+  #   'theme': 'Dark',
+  #   'colours': "{'#BF00FF', '#6300A9', '#000059', '#000113'}",
+  #   'public': 0,
+  #   'user_id': 2
+  # },
+  # {
+  #   'name': 'Dark Clouds',
+  #   'theme': 'Dark',
+  #   'colours': "{'#9F9177', '#111E24', '#0F3D42', '#3A727A'}",
+  #   'public': 1,
+  #   'user_id': 2
+  # },
+  # {
+  #   'name': 'Flower 6',
+  #   'colours': "{'#0A073A', '#223F96', '#3861BE', '#FFAE7D', '#FA6B34'}",
+  #   'public': 1,
+  #   'user_id': 3
+  # }
+  # ]
+  # db.addMany('palettes', samplePalettes)
+  # print(db.findAll('palettes'))
+
+  # print(db.findPalettesByUserId("2"))
+
+  # print(db.findPalettesByTheme('Warm', "1"))
+
+  # print(db.findPublicPalettes())
+
+  # db.updatePalettesTheme('Warm', 'Warm2', 1)
+
+  # print(db.findPaletteById("1"))
+
+  # print(db.findDistinctPalettes("2"))
+
+  # print(db.findLatestPalette())
+
+
 
 
 
