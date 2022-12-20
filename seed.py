@@ -52,33 +52,33 @@ def seed():
   {
     'name': 'Warm flower',
     'theme': 'Warm',
-    'colours': "{ '#4F2C8A', '#422964', '#1E310F', '#793730', '#D7841D' }",
+    'colours': "{'#4F2C8A', '#422964', '#1E310F', '#793730', '#D7841D' }",
     'public': 0,
     'user_id': 2
   },
   {
     'name': 'Fun Purple',
-    'colours': "{ '#C796E5', '#EDA4C2', '#A540FC', '#912CE0', '#54E2BA' }",
+    'colours': "{'#C796E5', '#EDA4C2', '#A540FC', '#912CE0', '#54E2BA' }",
     'public': 1,
     'user_id': 2
   },
   {
     'name': 'Dark Purple',
     'theme': 'Dark',
-    'colours': "{ '#BF00FF', '#6300A9', '#000059', '#000113' }",
+    'colours': "{'#BF00FF', '#6300A9', '#000059', '#000113' }",
     'public': 0,
     'user_id': 2
   },
   {
     'name': 'Dark Clouds',
     'theme': 'Dark',
-    'colours': "{ '#9F9177', '#111E24', '#0F3D42', '#3A727A' }",
+    'colours': "{'#9F9177', '#111E24', '#0F3D42', '#3A727A' }",
     'public': 1,
     'user_id': 2
   },
   {
     'name': 'Flower 6',
-    'colours': "{ '#0A073A', '#223F96', '#3861BE', '#FFAE7D', '#FA6B34' }",
+    'colours': "{'#0A073A', '#223F96', '#3861BE', '#FFAE7D', '#FA6B34' }",
     'public': 1,
     'user_id': 3
   }

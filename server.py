@@ -177,7 +177,7 @@ def get_public_palettes():
 def create_palette(palette: Palette):
   colours = '{'
   for colour in palette.colours:
-    colours += colour + ", "
+    colours += "'" + colour + "'" + ", "
   colours = colours[:-2]
   colours += '}'
   data = palette.asdict()
