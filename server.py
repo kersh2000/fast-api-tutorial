@@ -73,12 +73,15 @@ def find_user(username: str = Form(), password: str = Form()):
 
 # Create user through body
 @app.post("/register")
-def create_user(user: User):
+def create_user(username: str = Form(), password: str = Form()):
   try:
-    if not user.username.isalnum() or len(user.password) < 6:
+    if not username.isalnum() or len(password) < 6:
       raise ValueError("Invalid username or password")
-    db.addOne('users', user.asdict())
-    record = dict(db.findUserByUsername(user.username))
+    db.addOne('users', {
+      "username": username,
+      "password": password
+    })
+    record = dict(db.findUserByUsername(username))
     return record["id"]
   except ValueError:
     raise HTTPException(status_code=400, detail="Invalid username or password.")
