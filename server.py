@@ -190,6 +190,8 @@ def create_palette(palette: Palette):
   data["colours"] = colours
   try:
     db.addOne('palettes', data)
+    record =  dict(db.findLatestPalette())
+    return record["max"]
   except:
     raise HTTPException(status_code=400, detail="Palette already exists.")
 

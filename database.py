@@ -182,6 +182,12 @@ def findDistinctPalettes(user_id):
   WHERE user_id = (?)
   """, str(user_id))
 
+def findLatestPalette():
+  return query("""
+  SELECT MAX(id) AS max
+  FROM palettes
+  """)
+
 def addOne(tableName, props):
   if tableName not in tables.keys():
     return False
