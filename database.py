@@ -77,6 +77,7 @@ def destroyAll():
   destroy('palettes')
   initialise()
 
+# Find a user by their id
 def findUserById(id):
   return query("""
   SELECT * FROM users
@@ -84,36 +85,35 @@ def findUserById(id):
   LIMIT 1
   """, str(id))
 
+# Find a user by their username (for signing in)
 def findUserByUsername(username):
   return query("""
   SELECT * FROM users
   WHERE username = (?)
   LIMIT 1""", username)
 
+# Find a palette by their id
 def findPaletteById(id):
   return query("""
   SELECT * FROM palettes
   WHERE id = (?)
   """, str(id))
 
+# Find a palettes by the user's id (to retrieve a user's palettes)
 def findPalettesByUserId(user_id):
   return query("""
   SELECT * FROM palettes
   WHERE user_id = (?)
   """, str(user_id))
 
-# def findPaletteByName(name, user_id):
-#   return query("""
-#   SELECT * FROM palettes
-#   WHERE name = (?) AND user_id = (?)
-#   LIMIT 1""", (name, str(user_id)))
-
+# Find palettes which share the given theme
 def findPalettesByTheme(theme, user_id):
   return query("""
   SELECT * FROM palettes
   WHERE theme = (?) AND user_id = (?)
   """, (theme, str(user_id)))
 
+# Find all entries from a table for testing
 def findAll(tableName):
   """
   Returns all entries of a table.
@@ -124,22 +124,26 @@ def findAll(tableName):
     sql = f"SELECT * FROM {tableName}"
     return query(sql)
 
+# Remove a user by their id for delete requests (removing their account)
 def removeUserById(id):
   query("""
   DELETE FROM users WHERE id = (?)
   """, str(id))
 
+# Remove a palette by their id for delete requests (removing a palette fromt their account)
 def removePaletteById(id):
   query("""
   DELETE FROM palettes
   WHERE id = (?)
   """, str(id))
 
+# Remove all palettes from a user for delete requests (removing a user and their palettes)
 def removePalettesByUserId(user_id):
   query("""
   DELETE FROM palettes WHERE user_id = (?)
   """, str(user_id))
 
+# Update a palette's name in PUT requests
 def updatePalettesName(name, id):
   query("""
   UPDATE palettes
@@ -147,6 +151,7 @@ def updatePalettesName(name, id):
   WHERE id = (?)
   """, (name, id))
 
+# Update a palette's theme in PUT requests
 def updatePalettesTheme(oldTheme, newTheme, id):
   query("""
   UPDATE palettes
@@ -154,6 +159,7 @@ def updatePalettesTheme(oldTheme, newTheme, id):
   WHERE theme = (?) AND id = (?)
   """, (newTheme, oldTheme, str(id)))
 
+# Update a palette's colours in PUT requests
 def updatePalettesColours(id, colours):
   query("""
   UPDATE palettes
@@ -161,6 +167,7 @@ def updatePalettesColours(id, colours):
   WHERE id = (?)
   """, (colours, id))
 
+# Remove a palette's theme (set the value to null) to remove a palette from a theme
 def removePaletteTheme(theme, user_id):
   query("""
   UPDATE palettes
@@ -168,6 +175,7 @@ def removePaletteTheme(theme, user_id):
   WHERE theme = (?) AND user_id = (?)
   """, (theme, str(user_id)))
 
+# Find all public palettes with their username (creator) using an INNER JOIN query
 def findPublicPalettes():
   return query("""
   SELECT palettes.name, palettes.theme, palettes.colours, users.username 
@@ -176,18 +184,21 @@ def findPublicPalettes():
   WHERE palettes.public = 1
   """)
 
+# Find all distinct themes from a user for displaying palettes by theme
 def findDistinctPalettes(user_id):
   return query("""
   SELECT DISTINCT theme FROM palettes
   WHERE user_id = (?)
   """, str(user_id))
 
+# Find the latest palette added to the table, in order get the pallete just created by the user
 def findLatestPalette():
   return query("""
   SELECT * FROM palettes WHERE
   id = (SELECT MAX(id) FROM palettes)
   """)
 
+# Add one entry to any table (with alot of SQL injection avoidance)
 def addOne(tableName, props):
   if tableName not in tables.keys():
     return False
@@ -201,6 +212,7 @@ def addOne(tableName, props):
   )
   query(sql, props)
 
+# Add many entries to any table, using the function above to avoid SQLi
 def addMany(tableName, arr):
   if tableName not in tables.keys():
     return False

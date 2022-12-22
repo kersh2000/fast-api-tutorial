@@ -5,6 +5,7 @@ import seed as s
 from pydantic import BaseModel
 from typing import Optional
 
+# Create a class, inheriting the BaseModel class for declaring variables with types, for POST requests.
 class User(BaseModel):
   username: str
   password: str
@@ -15,6 +16,7 @@ class User(BaseModel):
       'password': self.password
     }
 
+# Palette BaseModel class for POST requests in creating a Palette.
 class Palette(BaseModel):
   name: str
   theme: Optional[str]
@@ -36,21 +38,26 @@ class Palette(BaseModel):
         data[key] = org[key]
     return data
 
+# PUT request for theme change
 class ThemeChange(BaseModel):
   id: int
   oldTheme: str
   newTheme: str
 
+# PUT request for colour change
 class ColourChange(BaseModel):
   id: int
   colours: list
 
+# PUT request for name change
 class NameChange(BaseModel):
   id: int
   newName: str
 
+# Creating an instance of FastAPI
 app = FastAPI()
 
+# This allows any origin/machine to connect to the API, including localhost on a different endpoint
 origins = ["*"]
 
 app.add_middleware(
@@ -88,6 +95,7 @@ def create_user(username: str = Form(), password: str = Form()):
   except Exception:
     raise HTTPException(status_code=400, detail="User already exists.")
 
+# Delete a user's account via their user id
 @app.delete("/users/{id}")
 def delete_user(id: int):
   record = db.findUserById(id)
@@ -149,9 +157,9 @@ def update_palette_theme(theme: ThemeChange):
   themeRecord = db.findPalettesByTheme(theme.oldTheme, theme.id)
   if not bool(themeRecord):
     raise HTTPException(status_code=404, detail="Error")
-
   db.updatePalettesTheme(theme.oldTheme, theme.newTheme, theme.id)
 
+# Update the palette's colour
 @app.put("/palettes/colour")
 def update_palette_colour(colour: ColourChange):
   record = db.findPaletteById(colour.id)
@@ -164,6 +172,7 @@ def update_palette_colour(colour: ColourChange):
   colours += '}'
   db.updatePalettesColours(colour.id, colours)
 
+# Delete a theme from a series of palettes
 @app.delete("/palettes/{user_id}/{theme}")
 def remove_theme(user_id: int, theme: str):
   record = db.findUserById(user_id)
@@ -172,6 +181,7 @@ def remove_theme(user_id: int, theme: str):
   db.removePaletteTheme(theme, user_id)
   return db.findPalettesByUserId(user_id)
 
+# Get all themes of a user
 @app.get("/distinct/{user_id}")
 def get_distinct_themes(user_id: int):
   record = db.findUserById(user_id)
